@@ -1,0 +1,42 @@
+@import '../../style/default.less';
+
+.header{
+    background-color: @colorM;
+    border-bottom: 1px @colorI solid;
+    .header_top{
+        height: 60px;
+        line-height: 60px;
+        padding: 0 20px;
+        text-align: right;
+        a{
+            margin-left: 20px
+        }
+    }
+    .breadcrumb{
+        height: 40px;
+        line-height: 40px;
+        padding: 0 20px;
+        border-top: 1px @colorV solid;
+        .breadcrumb_title{
+           text-align: center;
+           font-size:  @fontC;
+        //    伪类方式实现三角
+            &:after{
+                position: absolute;
+                content: '';
+                left: 50%;
+                top: 39px;
+                transform: translateX(-50%);
+                border-top: 9px @colorM solid;
+                border-left: 12px solid transparent;
+                border-right: 12px solid transparent;
+            }
+        }
+        .weather{
+            text-align: right;
+            .weather_detail{
+                padding-left: 20px;
+            }
+        }
+    }
+}

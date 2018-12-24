@@ -1,4 +1,5 @@
 import React from 'react';
+import './index.less';
 
 export default class Child extends React.Component{
     constructor(props) {
@@ -36,7 +37,7 @@ export default class Child extends React.Component{
     render() {
         return (
         <div>
-            <p>这里是子组件,吃啥子组件生命周期</p>
+            <p className="box">这里是子组件,吃啥子组件生命周期</p>
             <p>{this.props.name}</p>
         </div>
         )
