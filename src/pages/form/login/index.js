@@ -34,6 +34,23 @@ class FormLogin extends React.Component{
                     <Form layout="horizontal" style={{width: 300}}>
                         <Form.Item>
                             {
+                                getFieldDecorator('userName', {
+                                    // initialValue: "Jack", // 初始化值
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: '用户名不能为空',
+                                        },
+                                        {
+                                            pattern: /^\w/g,
+                                            message: '用户名首字母必须为英文符号',
+                                        }
+                                    ]
+                                })(<Input prefix={<Icon type="user"></Icon>} placeholder="请输入用户名"/>)
+                            }
+                        </Form.Item>
+                        <Form.Item>
+                            {
                                 getFieldDecorator('password', {
                                     // initialValue: "123456",
                                     rules: [
@@ -56,27 +73,12 @@ class FormLogin extends React.Component{
                         </Form.Item>
                         <Form.Item>
                             {
-                                getFieldDecorator('password', {
-                                    // initialValue: "123456",
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: '密码不能为空',
-                                        }
-                                    ]
-                                })(<Input prefix={<Icon type="lock"></Icon>} placeholder="请输入密码"/>)
-                            }
-                        </Form.Item>
-                        <Form.Item>
-                            {
-                                getFieldDecorator('userName', {
+                                getFieldDecorator('remember', {
                                     valuePropName: 'checked',
-                                    initialValue: false, // 初始化值
-                                })(
-                                    <Checkbox>记住密码</Checkbox>
-                                )
+                                    initialValue: true,
+                                })(<Checkbox>记住密码</Checkbox>)
                             }
-                            <a href="#" style={{float: 'right'}}>忘记密码？</a>
+                            <a href="#" style={{float: 'right'}}>忘记密码</a>
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" onClick={this.handleSubmit}>登录</Button>
