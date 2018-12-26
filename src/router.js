@@ -35,7 +35,7 @@ export default class IRouter extends React.Component{
                                 <Route path="/admin/ui/carousel" component={Carousel}/>
                                 <Route path="/admin/form/login" component={FormLogin}/>
                                 <Route path="/admin/form/reg" component={FormRegister}/>
-                                <Route path="/admin/form/basic" component={BasicTable}/>
+                                <Route path="/admin/table/basic" component={BasicTable}/>
                                 <Route component={NoMatch}/>
                             </Switch>
                         </Admin>
