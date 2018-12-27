@@ -2,10 +2,15 @@ import React from 'react';
 import { Card, Table, Button, Modal, message } from 'antd';
 import './table.less';
 import axios from './../../axios/index';
+import { Utils } from 'handlebars';
+import Util from './../../utils/utils';
 
 export default class BasicTable extends React.Component{
 
     state={}
+    params = {
+        page: 1
+    }
 
     componentDidMount() {
         const dataSource = [
@@ -64,6 +69,7 @@ export default class BasicTable extends React.Component{
             dataSource,
         })
         this.request()
+        this.pageRequest();
     }
 
     // 动态获取mock数据
@@ -71,7 +77,7 @@ export default class BasicTable extends React.Component{
         axios.ajax({
             url: '/table/list',
             data: {
-                paams: {
+                params: {
                     page:1,
                 }
             }
@@ -82,6 +88,35 @@ export default class BasicTable extends React.Component{
                     dataSource2: res.result.list,
                     selectedRowKeys: [],
                     selectedRows: null,
+                })
+            }
+            
+        })
+    }
+    pageRequest = () => {
+        console.log(this.params.page);
+        let _this = this;
+        axios.ajax({
+            url: '/table/list/page',
+            data: {
+                params: {
+                    page: this.params.page,
+                }
+            }
+        }).then((res) => {
+            console.log(res);
+            if (res.code === 200) {
+                this.setState({
+                    dataSource3: res.result.list,
+                    selectedRowKeys: [],
+                    selectedRows: null,
+                    pagination: Util.pagination(res,(current) => {
+                        // to-do
+                        _this.params.page = current;
+                        this.pageRequest();
+                        console.log(123);
+                        console.log(current);
+                    })
                 })
             }
             
@@ -218,7 +253,7 @@ export default class BasicTable extends React.Component{
                      }}
                     ></Table>
                 </Card>
-                <Card title="多选 - Mock">
+                <Card title="多选 - Mock" className="card_wrap">
                 {/* pagination 分页 */}
                 <div>
                     <Button onClick={this.handleDelete}>删除</Button>
@@ -237,6 +272,16 @@ export default class BasicTable extends React.Component{
                             //  onMouseEnter: () => {} // 鼠标移入行
                          }
                      }}
+                    ></Table>
+                </Card>
+                <Card title="分页 - Mock">
+                {/* pagination 分页 */}
+                    <Table
+                     columns={columns}
+                     dataSource={this.state.dataSource3}
+                     bordered
+                     pagination={this.state.pagination}
+                     rowKey="id"
                     ></Table>
                 </Card>
             </div>
