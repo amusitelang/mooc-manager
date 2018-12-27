@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Table } from 'antd';
+import { Card, Table, Button, Modal, message } from 'antd';
 import './table.less';
 import axios from './../../axios/index';
 
@@ -80,9 +80,33 @@ export default class BasicTable extends React.Component{
             if (res.code === 200) {
                 this.setState({
                     dataSource2: res.result.list,
+                    selectedRowKeys: [],
+                    selectedRows: null,
                 })
             }
             
+        })
+    }
+
+    onRowClick = (record, index) => {
+        console.log(record);
+        let selectKey = [record.id];
+        this.setState({
+            selectedRowKeys: selectKey,
+            selectedItem: record,
+        })
+    }
+    // 多选执行删除
+    handleDelete = () => {
+        let rows = this.state.selectedIds;
+        Modal.confirm({
+            title: '删除',
+            content: '确认删除?',
+            onOk: () => {
+                console.log(rows);
+                message.success('删除成功');
+                this.request();
+            }
         })
     }
 
@@ -99,14 +123,40 @@ export default class BasicTable extends React.Component{
             {
                 title: '性别',
                 dataIndex: 'sex',
+                render(sex) {
+                    return sex === 1 ? '男' : '女'
+                }
             },
             {
                 title: '状态',
                 dataIndex: 'state',
+                render(state) {
+                    let config = {
+                        '1': '咸鱼一条',
+                        '2': '风华浪子',
+                        '3': '北大才子',
+                        '4': '百度FE',
+                        '5': '创业者',
+                    }
+                    return config[state];
+                }
             },
             {
                 title: '爱好',
                 dataIndex: 'interest',
+                render(interest) {
+                    let config = {
+                        '1': '游泳',
+                        '2': '打篮球',
+                        '3': '踢足球',
+                        '4': '电子竞技',
+                        '5': '踢毽子',
+                        '6': '跑步',
+                        '7': '爬山',
+                        '8': '骑行',
+                    }
+                    return config[interest];
+                }
             },
             {
                 title: '生日',
@@ -121,15 +171,73 @@ export default class BasicTable extends React.Component{
                 dataIndex: 'time',
             },
         ]
+        const rowSelection = {
+            type: 'radio',
+            selectedRowKeys: this.state.selectedRowKeys,
+        }
+        const rowCheckSelection = {
+            type: 'checkbox',
+            selectedRowKeys: this.state.selectedRowKeys,
+            onChange: (selectedRowKeys, selectedRows) => {
+                let ids =[];
+                // eslint-disable-next-line array-callback-return
+                selectedRows.map((item) => {
+                    ids.push(item.id)
+                })
+                this.setState({
+                    selectedRowKeys,
+                    selectedIds:ids,
+                })
+            }
+        }
         return (
             <div>
                 <Card title="基础表格" className="card_wrap">
                 {/* pagination 分页 */}
                     <Table columns={columns} dataSource={this.state.dataSource} bordered pagination={false} rowKey="id"></Table>
                 </Card>
-                <Card title="动态数据渲染表格">
+                <Card title="动态数据渲染表格 - Mock" className="card_wrap">
                 {/* pagination 分页 */}
                     <Table columns={columns} dataSource={this.state.dataSource2} bordered pagination={false} rowKey="id"></Table>
+                </Card>
+                <Card title="单选 - Mock" className="card_wrap">
+                {/* pagination 分页 */}
+                    <Table
+                     columns={columns}
+                     dataSource={this.state.dataSource2}
+                     bordered pagination={false}
+                     rowKey="id"
+                     rowSelection={rowSelection}
+                     onRow={(record, index) => {
+                         return {
+                             onClick: () => {
+                                 this.onRowClick(record, index)
+                             }, // 点击行
+                            //  onMouseEnter: () => {} // 鼠标移入行
+                         }
+                     }}
+                    ></Table>
+                </Card>
+                <Card title="多选 - Mock">
+                {/* pagination 分页 */}
+                <div>
+                    <Button onClick={this.handleDelete}>删除</Button>
+                </div>
+                    <Table
+                     columns={columns}
+                     dataSource={this.state.dataSource2}
+                     bordered pagination={false}
+                     rowKey="id"
+                     rowSelection={rowCheckSelection}
+                     onRow={(record, index) => {
+                         return {
+                             onClick: () => {
+                                 this.onRowClick(record, index)
+                             }, // 点击行
+                            //  onMouseEnter: () => {} // 鼠标移入行
+                         }
+                     }}
+                    ></Table>
                 </Card>
             </div>
         )

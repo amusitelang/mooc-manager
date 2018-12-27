@@ -49,13 +49,18 @@ export default class Header extends React.Component{
             }
         })
     }
+
+    handleClose = (link) => {
+        console.log(link);
+    }
+
     render() {
         return (
             <div className="header">
                 <Row className="header_top">
                     <Col span="24">
                         <span>欢迎，{this.state.userName}</span>
-                        <a href="#">退出</a>
+                        <span onClick={() => this.handleClose('#')}>退出</span>
                     </Col>
                 </Row>
                 <Row className="breadcrumb">
